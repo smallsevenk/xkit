@@ -16,9 +16,9 @@ import 'package:xkit/api/interceptor/x_error_interceptor.dart';
 import 'package:xkit/api/interceptor/x_request_interceptor.dart';
 import 'package:xkit/api/interceptor/x_response_interceptor.dart';
 import 'package:xkit/api/x_base_resp.dart';
+import 'package:xkit/helper/x_global.dart';
 import 'package:xkit/helper/x_loading.dart';
 import 'package:xkit/helper/x_logger.dart';
-import 'package:xkit/helper/x_public.dart';
 import 'package:xkit/helper/x_sp.dart';
 
 class XApiService {
@@ -141,7 +141,7 @@ class XApiService {
         businessError();
       }
       if (response.message.isNotEmpty) {
-        xShowToast(response.message);
+        showToast(response.message);
       }
     }
   }
@@ -170,46 +170,37 @@ class XApiService {
     if (error is DioException) {
       switch (error.type) {
         case DioExceptionType.connectionTimeout:
-          xShowToast('连接超时，请稍后重试');
+          showToast('连接超时，请稍后重试');
           break;
         case DioExceptionType.receiveTimeout:
-          xShowToast('接收超时，请稍后重试');
+          showToast('接收超时，请稍后重试');
           break;
         case DioExceptionType.sendTimeout:
-          xShowToast('发送超时，请稍后重试');
+          showToast('发送超时，请稍后重试');
           break;
         case DioExceptionType.badResponse:
-          xShowToast('服务器错误：${error.response?.statusCode}');
+          showToast('服务器错误：${error.response?.statusCode}');
           break;
         case DioExceptionType.cancel:
-          xShowToast('请求已取消');
+          showToast('请求已取消');
           break;
         default:
-          xShowToast('网络异常，请检查您的网络');
+          showToast('网络异常，请检查您的网络');
       }
     } else {
-      xShowToast('未知错误：$error');
+      showToast('未知错误：$error');
       xdp(error.toString());
     }
   }
 
-  /// 检测网络状态
-  // Future<bool> _checkNetwork() async {
-  //   final connectivityResult = await Connectivity().checkConnectivity();
-  //   if (connectivityResult == ConnectivityResult.none) {
-  //     return false; // 无网络连接
-  //   }
-  //   return true; // 有网络连接
-  // }
-
   /// 非 Release 模式设置代理
   void setProxy() {
-    if (XSpUtil.instance.prefs.getBool('ProxyEnabled') ?? false) {
+    if (XSpUtil.prefs.getBool('ProxyEnabled') ?? false) {
       xdio.httpClientAdapter = IOHttpClientAdapter(
         createHttpClient: () {
           final client = HttpClient(context: SecurityContext(withTrustedRoots: false));
           client.findProxy = (uri) {
-            var ip = XSpUtil.instance.prefs.getString('ProxyAddress');
+            var ip = XSpUtil.prefs.getString('ProxyAddress');
             return 'PROXY $ip'; // proxyIp: 代理ip，proxyPort：代理端口
           };
           client.badCertificateCallback = (X509Certificate cert, String host, int port) =>

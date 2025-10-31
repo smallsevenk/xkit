@@ -9,8 +9,10 @@
 
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:xkit/helper/x_global.dart';
 import 'package:xkit/helper/x_loading.dart';
-import 'package:xkit/helper/x_public.dart';
+import 'package:xkit/helper/x_logger.dart';
+import 'dart:convert';
 
 class XErrorInterceptor extends Interceptor {
   @override
@@ -22,9 +24,11 @@ class XErrorInterceptor extends Interceptor {
         DioExceptionType.receiveTimeout,
         DioExceptionType.connectionTimeout,
       ].contains(err.type)) {
-        xShowToast('连接超时,请重试');
+        showToast('连接超时,请重试');
+      } else if (err.type == DioExceptionType.cancel) {
+        xdp('请求已取消: ${err.requestOptions.uri}');
       } else {
-        xShowToast("网络信号异常,请检查您的网络");
+        showToast("网络信号异常,请检查您的网络");
       }
       handler.next(err); // 继续传递错误
     } catch (e) {
@@ -32,19 +36,23 @@ class XErrorInterceptor extends Interceptor {
       if (err.requestOptions.extra['showLoading'] == true) {
         XLoading.dismiss();
       }
-      xShowToast("请求错误: ${e.toString()}");
+      showToast("请求错误: ${e.toString()}");
     }
   }
 
   // 打印错误信息
   void debugPrintError(DioException err) {
     try {
+      final encoder = const JsonEncoder.withIndent('  ');
+      var headers = err.requestOptions.headers;
+      debugPrint("headers: ${encoder.convert(headers)}");
       debugPrint('''      --- HTTP ERROR ---
       URL: ${err.requestOptions.baseUrl}${err.requestOptions.path}
       Method: ${err.requestOptions.method}
       Status Code: ${err.response?.statusCode}
       Error Type: ${err.type}
       Error Message: ${err.message}
+      
       Response Data: ${err.response?.data})
       --------------------''');
     } catch (e) {

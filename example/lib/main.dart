@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:xkit/helper/x_platform.dart';
 import 'package:xkit/x_kit.dart';
 import 'package:xkit_example/api/test_srv.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  XGlobal.init();
   runApp(const MyApp());
 }
 
@@ -73,8 +74,12 @@ class _MyAppState extends State<MyApp> {
         _buildRow(
           'sendCode',
           onTap: () {
-            TestService().sendSmsCode('13800138000').then((value) {
-              debugPrint('短信验证码发送结果: $value');
+            // TestService().sendSmsCode('13800138000').then((value) {
+            //   debugPrint('短信验证码发送结果: $value');
+            // });
+
+            TestService().syncUserInfo().then((value) {
+              debugPrint('同步用户信息完成');
             });
           },
         ),
@@ -86,7 +91,7 @@ class _MyAppState extends State<MyApp> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Container(height: 50, child: Text(title, style: TextStyle(fontSize: 20))).onTap(onTap),
+        SizedBox(height: 50, child: Text(title, style: TextStyle(fontSize: 20))).onTap(onTap),
       ],
     );
   }

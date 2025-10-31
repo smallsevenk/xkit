@@ -7,6 +7,8 @@
  * 功能描述:  
  */
 
+import 'package:xkit/x_kit.dart';
+
 extension StringExt on String {
   // AI播放消息内容处理 去除从"["/"!["开始到"]"结尾中间的内容,和 从"(http"开始到")"结尾中间的内容 的内容,并删除换行、空格，其他情况保留
   String get aiPlayMessage {
@@ -164,6 +166,15 @@ extension StringExt on String {
 
   // 是否是视频链接
   bool get isVideoUrl => contains(RegExp(r'\.(mp4|mov|avi|wmv|flv|mkv)$', caseSensitive: false));
+
+  bool get fromOtherApp {
+    var packageName = XAppDeviceInfo.instance.packageName;
+    if (XPlatform.isAndroid()) {
+      return this != packageName;
+    } else {
+      return this != packageName;
+    }
+  }
 }
 
 const List<String> fileTypes = [

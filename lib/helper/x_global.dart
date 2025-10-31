@@ -9,7 +9,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:xkit/helper/x_sp.dart';
+import 'package:xkit/x_kit.dart';
 
 class XGlobal {
   // 单例模式
@@ -18,25 +18,38 @@ class XGlobal {
   XGlobal._internal();
 
   /// 初始化全局属性
-  static Future<void> init() async {}
-
-  /// 全局主题模式
-  static String get themeMode => XSpUtil.instance.prefs.getString('themeMode') ?? 'system';
-  static set themeMode(String mode) {
-    XSpUtil.instance.prefs.setString('themeMode', mode);
-  }
-
-  /// 全局语言设置
-  static String get language => XSpUtil.instance.prefs.getString('language') ?? 'en';
-  static set language(String lang) {
-    XSpUtil.instance.prefs.setString('language', lang);
+  static Future<void> init() async {
+    await XSpUtil.init();
+    await XAppDeviceInfo.instance.init();
   }
 }
 
-xmKeyboradHide() {
+showToast(String? content, {int? animationTime, Object? stackTrace}) {
+  content = content ?? '';
+
+  if (content.isEmpty) return;
+
+  BotToast.showText(
+    text: content,
+    align: Alignment.center,
+    duration: Duration(seconds: animationTime ?? 2),
+  );
+}
+
+xKeyboradHide() {
   SystemChannels.textInput.invokeMethod('TextInput.hide');
 }
 
 safeAreaBottomPadding(BuildContext context) {
   MediaQuery.of(context).padding.bottom;
+}
+
+loseFocus(BuildContext context) {
+  FocusScope.of(context).requestFocus(FocusNode());
+}
+
+/// 全局主题模式
+String get themeMode => XSpUtil.prefs.getString('themeMode') ?? 'system';
+set themeMode(String mode) {
+  XSpUtil.prefs.setString('themeMode', mode);
 }

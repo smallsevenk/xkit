@@ -11,8 +11,8 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:xkit/api/x_base_resp.dart';
+import 'package:xkit/helper/x_global.dart';
 import 'package:xkit/helper/x_loading.dart';
-import 'package:xkit/helper/x_public.dart';
 
 /// 拦截器 数据初步处理
 class XResponseInterceptor extends InterceptorsWrapper {
@@ -41,7 +41,7 @@ class XResponseInterceptor extends InterceptorsWrapper {
       }
 
       final result = ResponseHandler.handleException(e, stackTrace);
-      xShowToast(result.toString(), stackTrace: stackTrace);
+      showToast(result.toString(), stackTrace: stackTrace);
       handler.reject(DioException(requestOptions: response.requestOptions, error: result));
     }
   }
@@ -83,24 +83,24 @@ class ResponseHandler {
   // /// 处理 Token 刷新失败
   // static void handleTokenRefreshFailed() {
   //   // LogoutBusEvent().fire(); // 触发登出事件
-  //   // xShowToast("登录已过期，请重新登录");
+  //   // showToast("登录已过期，请重新登录");
   // }
 
   /// 处理业务错误
   static void handleBusinessError(XBaseResp response) {
     if (response.message.isNotEmpty) {
-      xShowToast(response.message);
+      showToast(response.message);
     }
   }
 
   /// 处理 HTTP 错误
   static void handleHttpError(Response response) {
-    xShowToast("HTTP 错误: ${response.statusCode}");
+    showToast("HTTP 错误: ${response.statusCode}");
   }
 
   /// 处理意外的响应格式
   static void handleUnexpectedResponse(Response response) {
-    xShowToast("意外的响应格式:${response.data}");
+    showToast("意外的响应格式:${response.data}");
   }
 
   // /// 使用新的 Token 重新发起请求

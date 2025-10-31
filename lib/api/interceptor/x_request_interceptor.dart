@@ -8,10 +8,9 @@
  */
 
 import 'dart:convert';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:xkit/api/x_api_sign.dart';
-import 'package:xkit/helper/x_app_device_info.dart';
+import 'package:xkit/x_kit.dart';
 
 class XRequestInterceptor extends InterceptorsWrapper {
   @override
@@ -24,10 +23,11 @@ class XRequestInterceptor extends InterceptorsWrapper {
 
     var adInfo = XAppDeviceInfo.instance;
     // token
-    options.headers["Authorization"] = authorization;
+    options.headers["Authorization"] = "Bearer $authorization";
     options.headers["App-Name"] = Uri.encodeComponent(adInfo.appName);
     options.headers["Bundle-Id"] = adInfo.packageName;
     options.headers["Device-ID"] = await adInfo.getDeviceId();
+    options.headers["Device-Type"] = XPlatform.isIOS() ? "iOS" : "Android";
     options.headers["App-Version"] = adInfo.version;
 
     // 三方透传参数
@@ -38,10 +38,13 @@ class XRequestInterceptor extends InterceptorsWrapper {
 
     debugPrint("\nURL: ${options.uri.toString()}");
 
+    var publicKeyPem = await pem;
+
     var sign = await XApiSign.sign(
       url: options.uri.toString(),
       method: options.method,
       bodyParams: options.data,
+      publicKeyPem: publicKeyPem,
     );
     options.headers["X-Content-Security"] = sign;
 
@@ -58,5 +61,7 @@ class XRequestInterceptor extends InterceptorsWrapper {
 
   int get sendTimeout => 60;
 
-  dynamic get appParam => {};
+  Map get appParam => {};
+
+  Future<String> get pem async => '';
 }

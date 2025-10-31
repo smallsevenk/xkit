@@ -9,40 +9,32 @@
 
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:xkit/helper/x_logger.dart';
 
 class XSpUtil {
-  // 单例模式
-  static final XSpUtil _instance = XSpUtil._internal();
-  factory XSpUtil() => _instance;
-  static XSpUtil get instance => _instance;
-  XSpUtil._internal();
-
-  /// 初始化全局属性
+  /// 异步初始化，应用启动时调用一次
   static Future<void> init() async {
     _prefs = await SharedPreferences.getInstance();
-
-    // 数据库连接
-    // _db = await DataBaseManager.openDataBase();
   }
 
+  /// SharedPreferences 实例
+  static SharedPreferences? _prefs;
+
   /// 获取 SharedPreferences 实例
-  SharedPreferences get prefs {
+  static SharedPreferences get prefs {
     if (_prefs == null) {
       throw Exception("Global.init() must be called before accessing prefs.");
     }
     return _prefs!;
   }
 
-  /// SharedPreferences 实例
-  static SharedPreferences? _prefs;
-
   // 保存字典
   static Future<bool> saveMap(String key, Map<String, dynamic> map) async {
     try {
       String jsonString = jsonEncode(map);
-      return await XSpUtil.instance.prefs.setString(key, jsonString);
+      return await XSpUtil.prefs.setString(key, jsonString);
     } catch (e) {
-      print('保存字典失败: $e');
+      xdp('保存字典失败: $e');
       return false;
     }
   }
@@ -50,14 +42,14 @@ class XSpUtil {
   // 读取字典
   static Future<Map<String, dynamic>> getMap(String key) async {
     try {
-      String? jsonString = XSpUtil.instance.prefs.getString(key);
+      String? jsonString = XSpUtil.prefs.getString(key);
       if (jsonString != null) {
         Map<String, dynamic> dictionary = jsonDecode(jsonString);
         return dictionary;
       }
       return {};
     } catch (e) {
-      print('读取字典失败: $e');
+      xdp('读取字典失败: $e');
       return {};
     }
   }

@@ -8,25 +8,26 @@
  */
 
 import 'package:flutter/widgets.dart';
+import 'package:xkit/helper/x_sp.dart';
 
-// var key = 'xmlog';
-// Future<void> xlog(String log) async {
-//   var p = XGlobal.prefs;
-//   var logs = p.getStringList(key) ?? [];
-//   logs.add(DateTime.now().toIso8601String());
-//   logs.add(log);
-//   await p.setStringList(key, logs);
-// }
+var key = 'xmlog';
+Future<void> xlog(String log) async {
+  var p = XSpUtil.prefs;
+  var logs = p.getStringList(key) ?? [];
+  logs.add(DateTime.now().toIso8601String());
+  logs.add(log);
+  await p.setStringList(key, logs);
+}
 
-// xrlog() {
-//   XGlobal.prefs.setStringList(key, []);
-// }
+xrlog() {
+  XSpUtil.prefs.setStringList(key, []);
+}
 
-// List<String> xglog() {
-//   var p = XGlobal.prefs;
-//   var logs = p.getStringList(key) ?? [];
-//   return logs;
-// }
+List<String> xglog() {
+  var p = XSpUtil.prefs;
+  var logs = p.getStringList(key) ?? [];
+  return logs;
+}
 
 xdp(dynamic log, {int? wrapWidth}) {
   log = log is String ? log : log.toString();

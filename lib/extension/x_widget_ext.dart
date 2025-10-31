@@ -8,10 +8,15 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:xkit/helper/x_debounce_ges.dart';
 
 extension XWidgetExt on Widget {
   Widget onTap(Function()? onTapCallback) {
     return GestureDetector(behavior: HitTestBehavior.opaque, onTap: onTapCallback, child: this);
+  }
+
+  Widget onDbTap(Function()? onTapCallback) {
+    return XDebounceGestureDetector(onTap: onTapCallback, child: this);
   }
 
   Widget inBox({Color? color}) {

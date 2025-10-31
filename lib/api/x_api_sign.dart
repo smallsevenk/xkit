@@ -10,7 +10,6 @@
 import 'dart:convert';
 import 'package:encrypt/encrypt.dart';
 import 'package:pointycastle/asymmetric/api.dart';
-import 'package:flutter/services.dart' show rootBundle;
 import 'package:crypto/crypto.dart';
 
 String key = "q4t7w!z%C*F-JaNdRgUjXn2r5u8x/A?D";
@@ -19,6 +18,7 @@ class XApiSign {
   static Future<String> sign({
     required String url,
     required String method,
+    required String publicKeyPem,
     Map<String, dynamic>? bodyParams,
   }) async {
     int timestamp = DateTime.now().millisecondsSinceEpoch ~/ 1000;
@@ -31,8 +31,6 @@ class XApiSign {
 
     String secret;
     try {
-      // 读取公钥文件
-      final publicKeyPem = await rootBundle.loadString('packages/xmcs/assets/secret/public.pem');
       // 创建RSA加密器
       final parser = RSAKeyParser();
       final publicKey = parser.parse(publicKeyPem) as RSAPublicKey;

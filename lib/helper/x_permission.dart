@@ -110,14 +110,14 @@ class XPermissionUtil {
     Function()? showAlert,
     String? permissionDesc,
   }) async {
-    Set checkedPermissions = (XSpUtil.instance.prefs.getStringList(key) ?? []).toSet();
+    Set checkedPermissions = (XSpUtil.prefs.getStringList(key) ?? []).toSet();
     List<String> waitCheckPermissions = permissions.map((e) => e.value.toString()).toList();
     bool firstCheck = !waitCheckPermissions.any((element) => checkedPermissions.contains(element));
     checkedPermissions.addAll(waitCheckPermissions);
     // 先检查所有权限状态
     Map<Permission, PermissionStatus> statuses = await permissions.request();
     // 保存已检查的权限列表
-    XSpUtil.instance.prefs.setStringList(key, checkedPermissions.toList().cast<String>());
+    XSpUtil.prefs.setStringList(key, checkedPermissions.toList().cast<String>());
     // 检查是否全部授权
     bool allGranted = statuses.values.every((status) => status.isGranted);
     if (allGranted) return true;
