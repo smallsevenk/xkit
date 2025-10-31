@@ -167,14 +167,7 @@ extension StringExt on String {
   // 是否是视频链接
   bool get isVideoUrl => contains(RegExp(r'\.(mp4|mov|avi|wmv|flv|mkv)$', caseSensitive: false));
 
-  bool get fromOtherApp {
-    var packageName = XAppDeviceInfo.instance.packageName;
-    if (XPlatform.isAndroid()) {
-      return this != packageName;
-    } else {
-      return this != packageName;
-    }
-  }
+  bool get fromOtherApp => this != XAppDeviceInfo.instance.packageName;
 }
 
 const List<String> fileTypes = [
