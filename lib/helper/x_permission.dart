@@ -130,7 +130,7 @@ class XPermissionUtil {
   }
 
   /// 检查访问相册请求权限
-  static Future<bool> checkPhotos(BuildContext Function() context) async {
+  static Future<bool> checkPhotos(BuildContext Function()? context, Function()? showAlert) async {
     final status = await checkSinglePermission(Permission.photos);
     bool ok = await XPermissionUtil.requestPermissions(
       [Permission.photos],
