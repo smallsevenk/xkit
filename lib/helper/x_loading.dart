@@ -12,7 +12,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 class XLoading {
   static int _loadingCount = 0; // 计数器，用于跟踪当前请求数量
-  XLoading._() {
+  static init() {
     EasyLoading.instance
       ..loadingStyle = EasyLoadingStyle.custom
       ..backgroundColor = Colors.white
