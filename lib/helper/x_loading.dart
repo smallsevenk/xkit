@@ -7,10 +7,21 @@
  * 功能描述:  
  */
 
+import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 class XLoading {
   static int _loadingCount = 0; // 计数器，用于跟踪当前请求数量
+  XLoading._() {
+    EasyLoading.instance
+      ..loadingStyle = EasyLoadingStyle.custom
+      ..backgroundColor = Colors.white
+      ..textColor = Color(0xFF1A1A1A)
+      ..indicatorColor = Color(0xFF1A1A1A)
+      ..radius = 8.0
+      ..contentPadding = EdgeInsets.symmetric(horizontal: 24, vertical: 16)
+      ..userInteractions = false;
+  }
 
   /// 显示加载框
   static void show({String status = '加载中...'}) {
