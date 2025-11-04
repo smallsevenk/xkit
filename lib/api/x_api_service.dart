@@ -24,7 +24,7 @@ import 'package:xkit/helper/x_sp.dart';
 class XApiService {
   Dio xdio = Dio();
 
-  XApiService() {
+  init() {
     xdio.interceptors.addAll(interceptors);
   }
 

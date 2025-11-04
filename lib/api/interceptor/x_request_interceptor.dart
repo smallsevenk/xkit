@@ -7,61 +7,35 @@
  * 功能描述:  
  */
 
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:xkit/api/x_api_sign.dart';
 import 'package:xkit/x_kit.dart';
 
 class XRequestInterceptor extends InterceptorsWrapper {
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
     // 在请求发起前修改头部
+    // 设置请求的 Content-Type
+    options.contentType = Headers.jsonContentType;
     //设置超时时间
     options.connectTimeout = Duration(seconds: connectTimeout);
     options.receiveTimeout = Duration(seconds: receiveTimeout);
     options.sendTimeout = Duration(seconds: sendTimeout);
 
     var adInfo = XAppDeviceInfo.instance;
-    // token
-    options.headers["Authorization"] = "Bearer $authorization";
     options.headers["App-Name"] = Uri.encodeComponent(adInfo.appName);
     options.headers["Bundle-Id"] = adInfo.packageName;
     options.headers["Device-ID"] = await adInfo.getDeviceId();
     options.headers["Device-Type"] = XPlatform.isIOS() ? "iOS" : "Android";
     options.headers["App-Version"] = adInfo.version;
-
-    // 三方透传参数
-    options.headers["App-Param"] = jsonEncode(appParam);
-
-    // 设置请求的 Content-Type
-    options.contentType = Headers.jsonContentType;
-
     debugPrint("\nURL: ${options.uri.toString()}");
-
-    var publicKeyPem = await pem;
-
-    var sign = await XApiSign.sign(
-      url: options.uri.toString(),
-      method: options.method,
-      bodyParams: options.data,
-      publicKeyPem: publicKeyPem,
-    );
-    options.headers["X-Content-Security"] = sign;
 
     // 一定要加上这句话，否则进入不了下一步
     return handler.next(options);
   }
-
-  // 获取授权信息
-  String get authorization => '';
 
   int get connectTimeout => 120;
 
   int get receiveTimeout => 60;
 
   int get sendTimeout => 60;
-
-  Map get appParam => {};
-
-  Future<String> get pem async => '';
 }

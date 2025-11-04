@@ -1,5 +1,12 @@
-import 'package:xkit/api/interceptor/x_error_interceptor.dart';
-import 'package:xkit/api/interceptor/x_response_interceptor.dart';
+/*
+ * 文件名称: ca_api_service.dart
+ * 创建时间: 2025/11/04 15:43:18
+ * 作者名称: Andy.Zhao
+ * 联系方式: smallsevenk@vip.qq.com
+ * 创作版权: Copyright (c) 2025 XianHua Zhao (andy)
+ * 功能描述:  
+ */
+
 import 'package:xkit/api/x_api_service.dart';
 import 'package:xkit_example/api/ca_request_interceptor.dart';
 
@@ -17,12 +24,15 @@ class Service extends XApiService {
 
   // 私有构造函数
   Service._internal() {
+    init();
+  }
+
+  @override
+  init() {
+    super.init();
     // 初始化配置
     xdio.options.baseUrl = 'https://aiservice.sharexm.com';
-
     // 添加拦截器（如果需要）
-    xdio.interceptors.add(XResponseInterceptor());
-    xdio.interceptors.add(XErrorInterceptor());
     xdio.interceptors.add(CARequestInterceptor());
     setProxy();
   }
