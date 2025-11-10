@@ -36,16 +36,15 @@ showToast(String? content, {int? animationTime, Object? stackTrace}) {
   );
 }
 
-xKeyboradHide() {
+xKeyboradHide({BuildContext? context}) {
   SystemChannels.textInput.invokeMethod('TextInput.hide');
+  if (context != null) {
+    FocusScope.of(context).requestFocus(FocusNode());
+  }
 }
 
 safeAreaBottomPadding(BuildContext context) {
   MediaQuery.of(context).padding.bottom;
-}
-
-loseFocus(BuildContext context) {
-  FocusScope.of(context).requestFocus(FocusNode());
 }
 
 /// 全局主题模式
