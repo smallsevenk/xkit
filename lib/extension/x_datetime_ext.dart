@@ -33,6 +33,18 @@ extension XDateTimeExt on DateTime {
     return "${month.toString().padLeft(2, '0')}-${day.toString().padLeft(2, '0')} ${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}";
   }
 
+  String get toAiDateStr {
+    // 如果是当天显示 HH:mm，当年显示 MM-dd HH:mm，否则显示 yyyy-MM-dd HH:mm
+    final now = DateTime.now();
+    if (year == now.year && month == now.month && day == now.day) {
+      return toHHmmString();
+    } else if (year == now.year) {
+      return toShortDateTimeString();
+    } else {
+      return "${toDateString()} ${toHHmmString()}";
+    }
+  }
+
   /// 转换为友好的时间显示（如 "刚刚", "5分钟前", "昨天", "2023-04-10"）
   String toFriendlyString() {
     final now = DateTime.now();
