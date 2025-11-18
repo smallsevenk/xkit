@@ -20,7 +20,7 @@ extension XDateTimeExt on DateTime {
 
   /// 格式化为 `HH:mm` 格式
   String toHHmmString() {
-    return "${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}}";
+    return "${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}";
   }
 
   /// 格式化为 `yyyy-MM-dd HH:mm:ss` 格式
