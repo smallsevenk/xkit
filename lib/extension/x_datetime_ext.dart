@@ -33,7 +33,7 @@ extension XDateTimeExt on DateTime {
     return "${month.toString().padLeft(2, '0')}-${day.toString().padLeft(2, '0')} ${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}";
   }
 
-  String get toAiDateStr {
+  String toAiDateStr() {
     // 如果是当天显示 HH:mm，当年显示 MM-dd HH:mm，否则显示 yyyy-MM-dd HH:mm
     final now = DateTime.now();
     if (year == now.year && month == now.month && day == now.day) {
