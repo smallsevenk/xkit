@@ -8,40 +8,45 @@
  */
 
 extension XDateTimeExt on DateTime {
-  /// 格式化为 `yyyy-MM-dd` 格式
-  String toDateString() {
-    return "${year.toString().padLeft(4, '0')}-${month.toString().padLeft(2, '0')}-${day.toString().padLeft(2, '0')}";
-  }
-
-  /// 格式化为 `HH:mm:ss` 格式
-  String toTimeString() {
-    return "${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}:${second.toString().padLeft(2, '0')}";
-  }
-
   /// 格式化为 `HH:mm` 格式
-  String toHHmmString() {
+  String toHHmm() {
     return "${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}";
   }
 
+  /// 格式化为 `HH:mm:ss` 格式
+  String toHHmmss() {
+    return "${toHHmm()}:${second.toString().padLeft(2, '0')}";
+  }
+
+  /// 格式化为 `MM-dd ` 格式
+  String toMMdd({bool cnSplit = false}) {
+    return "${month.toString().padLeft(2, '0')}${cnSplit ? '月' : '-'}${day.toString().padLeft(2, '0')}${cnSplit ? '日' : ''}";
+  }
+
+  /// 格式化为 `yyyy-MM-dd` 格式
+  String toyyyyMMdd({bool cnSplit = false}) {
+    return "${year.toString().padLeft(4, '0')}${cnSplit ? '年' : ''}${toMMdd(cnSplit: cnSplit)}";
+  }
+
   /// 格式化为 `yyyy-MM-dd HH:mm:ss` 格式
-  String toDateTimeString() {
-    return "${toDateString()} ${toTimeString()}";
+  String toyyyyMMddHHmmss({bool cnSplit = false}) {
+    return "${toyyyyMMdd(cnSplit: cnSplit)} ${toHHmmss()}";
   }
 
   /// 格式化为 `MM-dd HH:mm` 格式
-  String toShortDateTimeString() {
-    return "${month.toString().padLeft(2, '0')}-${day.toString().padLeft(2, '0')} ${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}";
+  String toMMddHHmm({bool cnSplit = false}) {
+    return "${toMMdd(cnSplit: cnSplit)} ${toHHmm()}";
   }
 
-  String toAiDateStr() {
+  String get imRoomDisplayTime {
     // 如果是当天显示 HH:mm，当年显示 MM-dd HH:mm，否则显示 yyyy-MM-dd HH:mm
     final now = DateTime.now();
     if (year == now.year && month == now.month && day == now.day) {
-      return toHHmmString();
+      return toHHmm();
     } else if (year == now.year) {
-      return toShortDateTimeString();
+      return toMMddHHmm(cnSplit: true);
     } else {
-      return "${toDateString()} ${toHHmmString()}";
+      return "${toyyyyMMdd(cnSplit: true)} ${toHHmm()}";
     }
   }
 
@@ -61,7 +66,7 @@ extension XDateTimeExt on DateTime {
     } else if (difference.inDays < 7) {
       return "${difference.inDays}天前";
     } else {
-      return toHHmmString();
+      return toHHmm();
     }
   }
 }
